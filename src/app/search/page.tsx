@@ -364,4 +364,17 @@ export default function SearchPage() {
                             {game.title}
                           </h3>
                           <div className="flex items-center justify-between mb-3">
-                            <span className={`font-bold ${game.priceCRC === 0 ? 'text-green-400' : 'text-primary-400'}`
+                            <span className={`font-bold ${game.priceCRC === 0 ? 'text-green-400' : 'text-primary-400'}`}>
+  {game.priceCRC === 0 ? 'Gratis' : `₡${game.priceCRC.toLocaleString()}`}
+</span>
+</div> {/* cierre del div.p-4 */}
+</div> {/* cierre de la tarjeta */}
+))} {/* cierre del .map */}
+</div> {/* cierre del grid de juegos */}
+)} {/* cierre del ternario de "no se encontraron juegos" */}
+</div> {/* cierre del col-span-3 */}
+</div> {/* cierre del grid principal */}
+</div> {/* cierre del contenedor con padding */}
+<Footer />
+<ScrollToTop />
+</div> {/* cierre del contenedor principal */}
