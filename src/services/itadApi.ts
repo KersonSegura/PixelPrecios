@@ -1,6 +1,13 @@
 const ITAD_API_KEY = process.env.ITAD_API_KEY!;
 const BASE_URL = "https://api.isthereanydeal.com";
 
+export interface ITADGame {
+  id: string;
+  title: string;
+  image: string;
+  plain: string;
+}
+
 // Función para hacer lookup de títulos a IDs
 async function lookupGameIds(titles: string[]) {
   const url = `${BASE_URL}/lookup/id/title/v1?key=${ITAD_API_KEY}`;
@@ -42,6 +49,30 @@ async function getPricesByIds(ids: string[], region = "us") {
   } catch (err) {
     console.error("Error getting prices from ITAD:", err);
     throw err;
+  }
+}
+
+// Función para buscar juegos en ITAD
+export async function searchGames(query: string, limit = 10): Promise<ITADGame[]> {
+  const url = `${BASE_URL}/v01/search/plain/?key=${ITAD_API_KEY}&title=${encodeURIComponent(query)}`;
+  
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    
+    if (data && data.data && Array.isArray(data.data)) {
+      return data.data.slice(0, limit).map((item: any) => ({
+        id: item.id || '',
+        title: item.title || query,
+        image: item.image || '',
+        plain: item.plain || ''
+      }));
+    }
+    
+    return [];
+  } catch (err) {
+    console.error("Error searching games in ITAD:", err);
+    return [];
   }
 }
 
@@ -148,4 +179,11 @@ export async function getDealsByPlain(plain: string, region = "us") {
     console.error("Error fetching from ITAD", err);
     throw err;
   }
-} 
+}
+
+// Crear el objeto itadApiService que están importando los componentes
+export const itadApiService = {
+  searchGames,
+  getDealsByStoreList,
+  getDealsByPlain
+}; 

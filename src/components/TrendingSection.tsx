@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface TrendingSectionProps {
   currency: string
@@ -46,7 +47,13 @@ export default function TrendingSection({ currency, trendingGamesITAD }: Trendin
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {trendingGames.map((game, idx) => (
             <div key={game.name + idx} className="bg-dark-800 rounded-lg p-4 text-white flex flex-col items-center">
-              <img src={game.image} alt={game.name} className="w-full h-40 object-cover rounded mb-3" />
+              <Image 
+                src={game.image} 
+                alt={game.name} 
+                width={400}
+                height={160}
+                className="w-full h-40 object-cover rounded mb-3" 
+              />
               <div className="font-bold text-lg mb-2 text-center">{game.name}</div>
               {game.shop && <div className="text-sm text-dark-300 mb-1">{game.shop}</div>}
               {game.cut !== undefined && <div className="text-sm text-green-400">{game.cut}% OFF</div>}

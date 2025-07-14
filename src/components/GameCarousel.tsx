@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 interface Game {
   name: string;
@@ -35,7 +36,13 @@ export default function GameCarousel({ games, currency }: GameCarouselProps) {
         <div className="flex-1 flex justify-center gap-6">
           {pageGames.map((game, idx) => (
             <div key={game.name + idx} className="bg-dark-800 rounded-lg p-4 flex flex-col items-center shadow-lg w-72">
-              <img src={game.image} alt={game.name} className="w-full h-40 object-cover rounded mb-3 border border-dark-700" />
+              <Image 
+                src={game.image} 
+                alt={game.name} 
+                width={288}
+                height={160}
+                className="w-full h-40 object-cover rounded mb-3 border border-dark-700" 
+              />
               <div className="font-bold text-lg text-white mb-1 text-center">{game.name}</div>
               {game.shop && <div className="text-sm text-dark-300 mb-1">{game.shop}</div>}
               {game.priceNew !== undefined && (

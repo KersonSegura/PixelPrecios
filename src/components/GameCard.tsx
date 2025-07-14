@@ -91,9 +91,11 @@ export default function GameCard({ game, currency }: GameCardProps) {
           </span>
         )}
       </div>
-      <img
+      <Image
         src={game.image}
         alt={game.title}
+        width={400}
+        height={300}
         className="w-full h-48 object-cover object-center"
       />
       <div className="p-4 flex flex-col flex-1 justify-between">
