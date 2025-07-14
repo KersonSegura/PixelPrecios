@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ScrollToTop from '@/components/ScrollToTop'
@@ -329,10 +330,11 @@ export default function SearchPage() {
                         className="bg-dark-800 rounded-xl overflow-hidden cursor-pointer hover:bg-dark-700 transition-colors group"
                       >
                         <div className="relative h-48">
-                          <img
+                          <Image
                             src={game.image}
                             alt={game.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                           {game.discount > 0 && (
                             <div className={`absolute top-2 right-2 text-white px-2 py-1 rounded text-sm font-bold ${

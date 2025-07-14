@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { steamApiService, type SteamAchievement } from '@/services/steamApi'
 
 interface SteamAchievementsProps {
@@ -90,9 +91,11 @@ export default function SteamAchievements({ steamAppId, maxDisplay = 12 }: Steam
           <div key={index} className="bg-dark-700 rounded-lg p-4 hover:bg-dark-600 transition-colors">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <img 
+                <Image 
                   src={steamApiService.getAchievementIconUrl(steamAppId, achievement.icon)}
                   alt={achievement.displayName}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 rounded"
                   onError={(e) => {
                     e.currentTarget.src = '/placeholder-achievement.png'
