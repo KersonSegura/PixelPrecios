@@ -399,5 +399,5 @@ export default function SearchPage() {
       <Footer />
       <ScrollToTop />
     </div>
-  )
+  );
 }
