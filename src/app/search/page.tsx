@@ -29,7 +29,7 @@ export default function SearchPage() {
     store: ''
   })
 
-  // Datos simulados de juegos (en un proyecto real vendrían de una API)
+  // Datos simulados de juegos
   const allGames: Game[] = [
     {
       id: 'cyberpunk-2077',
@@ -39,7 +39,7 @@ export default function SearchPage() {
       originalPriceCRC: 35000,
       discount: 29,
       store: 'Steam',
-      tags: ['RPG', 'Acción', 'Mundo Abierto', 'Cyberpunk', 'Futurista', 'Modificación Corporal', 'Cibernética', 'Distopía', 'Narrativa', 'Exploración']
+      tags: ['RPG', 'Acción', 'Mundo Abierto', 'Cyberpunk', 'Futurista']
     },
     {
       id: 'elden-ring',
@@ -49,7 +49,7 @@ export default function SearchPage() {
       originalPriceCRC: 40000,
       discount: 25,
       store: 'Steam',
-      tags: ['RPG', 'Acción', 'Mundo Abierto', 'Fantasía', 'Difícil', 'Souls-like', 'Exploración', 'Jefes', 'Misterio', 'Lore', 'Desafío']
+      tags: ['RPG', 'Acción', 'Mundo Abierto', 'Fantasía', 'Difícil']
     },
     {
       id: 'red-dead-redemption-2',
@@ -59,7 +59,7 @@ export default function SearchPage() {
       originalPriceCRC: 30000,
       discount: 33,
       store: 'Steam',
-      tags: ['Acción', 'Mundo Abierto', 'Western', 'Aventura', 'Histórico', 'Caballos', 'Armas', 'Bandidos', 'Exploración', 'Narrativa', 'Siglo XIX']
+      tags: ['Acción', 'Mundo Abierto', 'Western', 'Aventura']
     },
     {
       id: 'the-witcher-3',
@@ -69,7 +69,7 @@ export default function SearchPage() {
       originalPriceCRC: 25000,
       discount: 40,
       store: 'Steam',
-      tags: ['RPG', 'Acción', 'Mundo Abierto', 'Fantasía', 'Aventura', 'Monstruos', 'Magia', 'Exploración', 'Narrativa', 'Cazador', 'Medieval']
+      tags: ['RPG', 'Acción', 'Mundo Abierto', 'Fantasía', 'Aventura']
     },
     {
       id: 'god-of-war',
@@ -79,7 +79,7 @@ export default function SearchPage() {
       originalPriceCRC: 45000,
       discount: 22,
       store: 'Steam',
-      tags: ['Acción', 'Aventura', 'Mitología', 'Hack and Slash', 'Griego', 'Dioses', 'Combate', 'Narrativa', 'Exploración', 'Puzzles']
+      tags: ['Acción', 'Aventura', 'Mitología', 'Hack and Slash']
     },
     {
       id: 'gta-v-free',
@@ -89,7 +89,7 @@ export default function SearchPage() {
       originalPriceCRC: 25000,
       discount: 100,
       store: 'Epic Games',
-      tags: ['Acción', 'Mundo Abierto', 'Crimen', 'Aventura', 'Coches', 'Armas', 'Gangsters', 'Exploración', 'Misiones', 'Libertad']
+      tags: ['Acción', 'Mundo Abierto', 'Crimen', 'Aventura']
     },
     {
       id: 'watch-dogs-free',
@@ -99,12 +99,11 @@ export default function SearchPage() {
       originalPriceCRC: 30000,
       discount: 100,
       store: 'GOG',
-      tags: ['Acción', 'Mundo Abierto', 'Hacking', 'Aventura', 'Tecnología', 'Vigilancia', 'San Francisco', 'Misiones', 'Exploración', 'Sigilo']
+      tags: ['Acción', 'Mundo Abierto', 'Hacking', 'Aventura']
     }
   ]
 
   useEffect(() => {
-    // Simular carga de datos y inicializar filtros desde URL
     setTimeout(() => {
       setGames(allGames)
       setIsLoading(false)
@@ -112,12 +111,10 @@ export default function SearchPage() {
   }, [])
 
   const filteredGames = games.filter(game => {
-    // Filtro por query
     if (filters.query && !game.title.toLowerCase().includes(filters.query.toLowerCase())) {
       return false
     }
     
-    // Filtro por tags
     if (filters.tags.length > 0) {
       const hasMatchingTag = filters.tags.some(tag => 
         game.tags.some(gameTag => 
@@ -127,17 +124,14 @@ export default function SearchPage() {
       if (!hasMatchingTag) return false
     }
     
-    // Filtro por precio
     if (game.priceCRC < filters.priceRange[0] || game.priceCRC > filters.priceRange[1]) {
       return false
     }
     
-    // Filtro por descuento
     if (game.discount < filters.discount) {
       return false
     }
     
-    // Filtro por tienda
     if (filters.store && game.store.toLowerCase() !== filters.store.toLowerCase()) {
       return false
     }
@@ -152,7 +146,6 @@ export default function SearchPage() {
     
     setFilters(prev => ({ ...prev, tags: newTags }))
     
-    // Actualizar URL
     const params = new URLSearchParams()
     if (filters.query) params.set('q', filters.query)
     if (newTags.length > 0) params.set('tags', newTags.join(','))
@@ -170,7 +163,6 @@ export default function SearchPage() {
     router.push('/search')
   }
 
-  // Función para obtener tags únicos y ordenados por frecuencia
   const getAllTags = () => {
     const tagCount: { [key: string]: number } = {}
     
@@ -180,7 +172,6 @@ export default function SearchPage() {
       })
     })
     
-    // Ordenar por frecuencia (más comunes primero) y luego alfabéticamente
     return Object.entries(tagCount)
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
       .map(([tag]) => tag)
@@ -188,7 +179,7 @@ export default function SearchPage() {
 
   const [showAllTags, setShowAllTags] = useState(false)
   const allTags = getAllTags()
-  const displayedTags = showAllTags ? allTags : allTags.slice(0, 20) // Limitar a los 20 tags más populares
+  const displayedTags = showAllTags ? allTags : allTags.slice(0, 20)
 
   return (
     <div className="min-h-screen bg-dark-900">
@@ -200,11 +191,9 @@ export default function SearchPage() {
       />
       
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header de búsqueda */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-4">Búsqueda de Juegos</h1>
           
-          {/* Barra de búsqueda */}
           <div className="flex gap-4 mb-6">
             <input
               type="text"
@@ -221,7 +210,6 @@ export default function SearchPage() {
             </button>
           </div>
 
-          {/* Filtros activos */}
           {filters.tags.length > 0 && (
             <div className="mb-4">
               <span className="text-dark-300 text-sm mr-2">Filtros activos:</span>
@@ -244,12 +232,10 @@ export default function SearchPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar de filtros */}
           <div className="lg:col-span-1">
             <div className="bg-dark-800 rounded-xl p-6 sticky top-8">
               <h3 className="text-xl font-bold text-white mb-4">Filtros</h3>
               
-              {/* Tags */}
               <div className="mb-6">
                 <h4 className="text-lg font-semibold text-white mb-3">Géneros y Tags</h4>
                 <div className="flex flex-wrap gap-2">
@@ -277,7 +263,6 @@ export default function SearchPage() {
                 )}
               </div>
 
-              {/* Rango de precio */}
               <div className="mb-6">
                 <h4 className="text-lg font-semibold text-white mb-3">Rango de Precio</h4>
                 <div className="space-y-2">
@@ -299,7 +284,6 @@ export default function SearchPage() {
                 </div>
               </div>
 
-                            {/* Descuento mínimo */}
               <div className="mb-6">
                 <h4 className="text-lg font-semibold text-white mb-3">Descuento Mínimo</h4>
                 <input
@@ -318,7 +302,6 @@ export default function SearchPage() {
             </div>
           </div>
 
-          {/* Resultados */}
           <div className="lg:col-span-3">
             {isLoading ? (
               <div className="flex items-center justify-center h-64">
@@ -392,7 +375,7 @@ export default function SearchPage() {
                   </div>
                 )}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
