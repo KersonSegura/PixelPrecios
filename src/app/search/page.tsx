@@ -365,16 +365,39 @@ export default function SearchPage() {
                           </h3>
                           <div className="flex items-center justify-between mb-3">
                             <span className={`font-bold ${game.priceCRC === 0 ? 'text-green-400' : 'text-primary-400'}`}>
-  {game.priceCRC === 0 ? 'Gratis' : `₡${game.priceCRC.toLocaleString()}`}
-</span>
-</div> {/* cierre del div.p-4 */}
-</div> {/* cierre de la tarjeta */}
-))} {/* cierre del .map */}
-</div> {/* cierre del grid de juegos */}
-)} {/* cierre del ternario de "no se encontraron juegos" */}
-</div> {/* cierre del col-span-3 */}
-</div> {/* cierre del grid principal */}
-</div> {/* cierre del contenedor con padding */}
-<Footer />
-<ScrollToTop />
-</div> {/* cierre del contenedor principal */}
+                              {game.priceCRC === 0 ? 'Gratis' : `₡${game.priceCRC.toLocaleString()}`}
+                            </span>
+                            {game.originalPriceCRC > game.priceCRC && (
+                              <span className="text-dark-400 text-sm line-through">
+                                ₡{game.originalPriceCRC.toLocaleString()}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-dark-300 text-sm">{game.store}</span>
+                            <div className="flex flex-wrap gap-1">
+                              {game.tags.slice(0, 3).map(tag => (
+                                <span
+                                  key={tag}
+                                  className="px-2 py-1 bg-dark-700 text-dark-200 text-xs rounded"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+      <ScrollToTop />
+    </div>
+  )
+}
