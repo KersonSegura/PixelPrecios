@@ -23,6 +23,15 @@ export interface SteamGameDetails {
       path_thumbnail: string;
       path_full: string;
     }>;
+    platforms?: {
+      windows?: boolean;
+      mac?: boolean;
+      linux?: boolean;
+    };
+    release_date?: {
+      coming_soon: boolean;
+      date: string;
+    };
   };
 }
 

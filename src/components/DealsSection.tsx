@@ -3,27 +3,7 @@
 import { useState, useEffect } from 'react'
 import GameCard from './GameCard'
 import { CurrencyService, Game } from '@/services/currencyService'
-
-interface TrendingGame {
-  name: string
-  image: string
-  shop: string
-  priceNew: number
-  priceOld: number
-  discount: number
-  basePrice: number
-  rating: number
-  metacritic: number
-  platforms: string[]
-  itadUrl: string
-  slug: string
-  publishers: any[]
-  genres: any[]
-  ratings_count: number
-  isPriority: boolean
-  rawgRating: number
-  rawgMetacritic: number
-}
+import { TrendingGameAPI } from '@/types/Game'
 
 interface DealsSectionProps {
   currency: string
@@ -34,8 +14,8 @@ export default function DealsSection({ currency }: DealsSectionProps) {
   const [fiveUSDPrice, setFiveUSDPrice] = useState<string>('')
   const [tenUSDPrice, setTenUSDPrice] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
-  const [games, setGames] = useState<TrendingGame[]>([])
-  const [displayedGames, setDisplayedGames] = useState<TrendingGame[]>([])
+  const [games, setGames] = useState<TrendingGameAPI[]>([])
+  const [displayedGames, setDisplayedGames] = useState<TrendingGameAPI[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const gamesPerPage = 9
@@ -78,7 +58,8 @@ export default function DealsSection({ currency }: DealsSectionProps) {
       }
       const rate = rates[currency as keyof typeof rates] || 500
       const fiveUSDInTargetCurrency = CurrencyService.roundFilterPrice(5 * rate, currency)
-      const gamePrice = Math.round(game.priceNew * (rate / 500))
+      // Extract price from ITAD data if available
+      const gamePrice = game.price?.price?.amount || 0
       return gamePrice <= fiveUSDInTargetCurrency
     }
     if (activeFilter === 'under10') {
@@ -93,20 +74,27 @@ export default function DealsSection({ currency }: DealsSectionProps) {
       }
       const rate = rates[currency as keyof typeof rates] || 500
       const tenUSDInTargetCurrency = CurrencyService.roundFilterPrice(10 * rate, currency)
-      const gamePrice = Math.round(game.priceNew * (rate / 500))
+      // Extract price from ITAD data if available
+      const gamePrice = game.price?.price?.amount || 0
       return gamePrice <= tenUSDInTargetCurrency
     }
     if (activeFilter === 'over50') {
-      return game.discount >= 50
+      // Extract discount from ITAD data if available
+      const discount = game.price?.cut || 0
+      return discount >= 50
     }
     if (activeFilter === 'steam') {
-      return game.shop.toLowerCase() === 'steam'
+      // Extract shop from ITAD data if available
+      const shop = game.price?.shop?.name || ''
+      return shop.toLowerCase() === 'steam'
     }
     if (activeFilter === 'epic') {
-      return game.shop.toLowerCase().includes('epic')
+      const shop = game.price?.shop?.name || ''
+      return shop.toLowerCase().includes('epic')
     }
     if (activeFilter === 'gog') {
-      return game.shop.toLowerCase() === 'gog'
+      const shop = game.price?.shop?.name || ''
+      return shop.toLowerCase() === 'gog'
     }
     return true
   })
@@ -175,18 +163,18 @@ export default function DealsSection({ currency }: DealsSectionProps) {
             <div className="col-span-3 text-center text-white">No hay ofertas relevantes.</div>
           ) : (
             displayedGames.map((game, idx) => {
-              // Convertir TrendingGame a Game
+              // Convertir TrendingGameAPI a Game
               const gameCard: Game = {
-                id: game.slug,
+                id: game.id.toString(),
                 title: game.name,
-                image: game.image,
-                priceCRC: game.priceNew * 500, // Convertir a CRC (aproximado)
-                originalPriceCRC: game.priceOld * 500,
-                discount: game.discount,
-                store: game.shop,
-                tags: game.genres?.map(g => g.name) || []
+                image: game.background_image,
+                priceCRC: game.price?.price?.amount * 500 || 0, // Convertir a CRC (aproximado)
+                originalPriceCRC: game.price?.regular?.amount * 500 || 0,
+                discount: game.price?.cut || 0,
+                store: game.price?.shop?.name || '',
+                tags: game.platforms || []
               }
-              return <GameCard key={game.slug + idx} game={gameCard} currency={currency} />
+              return <GameCard key={game.id + idx} game={gameCard} currency={currency} />
             })
           )}
         </div>

@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import { TrendingGameAPI } from '@/types/Game';
+import { TrendingGameAPI } from '../../../types/Game';
 
 const RAWG_API_KEY = 'c191b3a2896a4a24990494fa5ef10a9a';
 

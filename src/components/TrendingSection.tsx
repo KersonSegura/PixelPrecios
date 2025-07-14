@@ -2,25 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { TrendingGameComponent } from '@/types/Game'
 
 interface TrendingSectionProps {
   currency: string
-  trendingGamesITAD?: TrendingGame[]
-}
-
-interface TrendingGame {
-  name: string;
-  image: string;
-  shop?: string;
-  priceNew?: number;
-  priceOld?: number;
-  cut?: number;
-  url?: string;
+  trendingGamesITAD?: TrendingGameComponent[]
 }
 
 export default function TrendingSection({ currency, trendingGamesITAD }: TrendingSectionProps) {
   const [isClient, setIsClient] = useState(false)
-  const [trendingGames, setTrendingGames] = useState<TrendingGame[]>([])
+  const [trendingGames, setTrendingGames] = useState<TrendingGameComponent[]>([])
 
   useEffect(() => {
     setIsClient(true)

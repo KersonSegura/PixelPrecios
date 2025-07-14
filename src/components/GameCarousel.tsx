@@ -2,15 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-
-interface Game {
-  name: string;
-  image: string;
-  shop?: string;
-  priceNew?: number;
-  priceOld?: number;
-  discount?: number;
-}
+import { Game } from '@/types/Game';
 
 interface GameCarouselProps {
   games: Game[];
