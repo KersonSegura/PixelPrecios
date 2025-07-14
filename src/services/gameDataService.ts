@@ -1,6 +1,6 @@
 import { rawgApiService, type RAWGGame } from './rawgApi'
 import { steamApiService, type SteamGameDetails } from './steamApi'
-import { itadApiService, type ITADGameInfo } from './itadApi'
+import { itadApiService, type ITADGame } from './itadApi'
 
 export interface UnifiedGameData {
   // Basic Info (Priority: RAWG, Backup: Steam)

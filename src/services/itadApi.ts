@@ -181,9 +181,38 @@ export async function getDealsByPlain(plain: string, region = "us") {
   }
 }
 
+// Función para obtener deals de un juego específico
+export async function getGameDeals(gameId: string, region = "us") {
+  try {
+    // Primero buscar el plain del juego
+    const searchResults = await searchGames(gameId, 1);
+    if (searchResults.length === 0) {
+      return null;
+    }
+    
+    const game = searchResults[0];
+    if (!game.plain) {
+      return null;
+    }
+    
+    // Obtener precios usando el plain
+    const pricesData = await getDealsByPlain(game.plain, region);
+    
+    return {
+      gameId: game.id,
+      gameTitle: game.title,
+      deals: pricesData[game.plain]?.deals || []
+    };
+  } catch (err) {
+    console.error("Error getting game deals from ITAD:", err);
+    return null;
+  }
+}
+
 // Crear el objeto itadApiService que están importando los componentes
 export const itadApiService = {
   searchGames,
   getDealsByStoreList,
-  getDealsByPlain
+  getDealsByPlain,
+  getGameDeals
 }; 

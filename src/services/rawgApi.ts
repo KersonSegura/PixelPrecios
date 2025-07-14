@@ -3,10 +3,13 @@ const RAWG_BASE_URL = "https://api.rawg.io/api";
 
 export interface RAWGGame {
   id: number;
+  slug: string;
   name: string;
   background_image: string;
+  description: string;
   rating: number;
   rating_top: number;
+  ratings_count: number;
   released: string;
   metacritic: number;
   playtime: number;
@@ -19,6 +22,24 @@ export interface RAWGGame {
   genres: Array<{
     id: number;
     name: string;
+  }>;
+  developers: Array<{
+    id: number;
+    name: string;
+  }>;
+  publishers: Array<{
+    id: number;
+    name: string;
+  }>;
+  screenshots: Array<{
+    id: number;
+    image: string;
+  }>;
+  movies: Array<{
+    id: number;
+    data: {
+      max: string;
+    };
   }>;
 }
 
@@ -74,10 +95,20 @@ export async function searchAndGetBestMatch(query: string): Promise<RAWGGame | n
   }
 }
 
+export function getGameRequirements(game: RAWGGame) {
+  // RAWG API doesn't provide system requirements in the basic game endpoint
+  // This would need a separate API call to get detailed requirements
+  return {
+    minimum: [],
+    recommended: []
+  };
+}
+
 // Crear el objeto rawgApiService que están importando los componentes
 export const rawgApiService = {
   getTrendingGamesRAWG,
   searchGameRAWG,
   getGameDetailsFromRAWG,
-  searchAndGetBestMatch
+  searchAndGetBestMatch,
+  getGameRequirements
 }; 

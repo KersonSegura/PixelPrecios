@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Header from '@/components/Header'
@@ -31,7 +31,7 @@ export default function SearchPage() {
   })
 
   // Datos simulados de juegos
-  const allGames: Game[] = [
+  const allGames: Game[] = useMemo(() => [
     {
       id: 'cyberpunk-2077',
       title: 'Cyberpunk 2077',
@@ -102,7 +102,7 @@ export default function SearchPage() {
       store: 'GOG',
       tags: ['Acción', 'Mundo Abierto', 'Hacking', 'Aventura']
     }
-  ]
+  ], [])
 
   useEffect(() => {
     setTimeout(() => {
