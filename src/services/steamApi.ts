@@ -2,6 +2,7 @@ const STEAM_API_KEY = process.env.STEAM_API_KEY!;
 const BASE_URL = "https://store.steampowered.com/api";
 
 export interface SteamGameDetails {
+  steam_appid: number;
   name: string;
   header_image: string;
   short_description: string;
@@ -13,6 +14,7 @@ export interface SteamGameDetails {
     final: number;
     initial: number;
     discount_percent: number;
+    currency: string;
   };
   achievements?: {
     total: number;
@@ -31,6 +33,12 @@ export interface SteamGameDetails {
     coming_soon: boolean;
     date: string;
   };
+  movies?: Array<{
+    id: number;
+    mp4: {
+      max: string;
+    };
+  }>;
 }
 
 export interface SteamPriceResponse {
