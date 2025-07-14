@@ -19,19 +19,24 @@ export default function SteamGameDetails({ steamAppId, currency }: SteamGameDeta
     const fetchGameDetails = async () => {
       try {
         setLoading(true)
-        const details = await steamApiService.getGameDetails(steamAppId)
-        setGameDetails(details)
+        const detailsResponse = await steamApiService.getGameDetails(steamAppId)
         
-        // Fetch achievements if available
-        if (details?.data?.achievements?.total && details.data.achievements.total > 0) {
-          try {
-            const schema = await steamApiService.getGameSchema(steamAppId)
-            if (schema.game?.availableGameStats?.achievements) {
-              setAchievements(schema.game.availableGameStats.achievements)
+        if (detailsResponse.success) {
+          setGameDetails(detailsResponse.data)
+          
+          // Fetch achievements if available
+          if (detailsResponse.data?.achievements?.total && detailsResponse.data.achievements.total > 0) {
+            try {
+              const schema = await steamApiService.getGameSchema(steamAppId)
+              if (schema.game?.availableGameStats?.achievements) {
+                setAchievements(schema.game.availableGameStats.achievements)
+              }
+            } catch (achievementError) {
+              console.warn('Could not fetch achievements:', achievementError)
             }
-          } catch (achievementError) {
-            console.warn('Could not fetch achievements:', achievementError)
           }
+        } else {
+          console.error('Failed to fetch game details')
         }
       } catch (error) {
         console.error('Error fetching game details:', error)
@@ -85,7 +90,7 @@ export default function SteamGameDetails({ steamAppId, currency }: SteamGameDeta
     )
   }
 
-  if (!gameDetails || !gameDetails.data) {
+  if (!gameDetails) {
     return (
       <div className="bg-dark-800 rounded-xl p-6">
         <p className="text-dark-300">No se pudieron cargar los detalles del juego.</p>
@@ -93,7 +98,7 @@ export default function SteamGameDetails({ steamAppId, currency }: SteamGameDeta
     )
   }
 
-  const data = gameDetails.data
+  const data = gameDetails
 
   return (
     <div className="bg-dark-800 rounded-xl overflow-hidden">
@@ -311,7 +316,7 @@ export default function SteamGameDetails({ steamAppId, currency }: SteamGameDeta
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Capturas de Pantalla</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.screenshots.slice(0, 9).map((screenshot, index) => (
+              {data.screenshots.slice(0, 9).map((screenshot: { path_thumbnail: string }, index: number) => (
                 <div key={index} className="relative group cursor-pointer">
                   <Image 
                     src={screenshot.path_thumbnail} 

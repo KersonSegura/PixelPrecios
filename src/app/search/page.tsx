@@ -109,7 +109,7 @@ export default function SearchPage() {
       setGames(allGames)
       setIsLoading(false)
     }, 1000)
-  }, [])
+  }, [allGames])
 
   const filteredGames = games.filter(game => {
     if (filters.query && !game.title.toLowerCase().includes(filters.query.toLowerCase())) {
