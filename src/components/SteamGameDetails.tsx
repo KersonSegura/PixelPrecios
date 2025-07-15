@@ -19,7 +19,7 @@ export default function SteamGameDetails({ steamAppId, currency }: SteamGameDeta
     const fetchGameDetails = async () => {
       try {
         setLoading(true)
-        const detailsResponse = await steamApiService.getGameDetails(steamAppId)
+        const detailsResponse: { success: boolean; data: SteamGameDetails } = await steamApiService.getGameDetails(steamAppId)
         
         if (detailsResponse.success) {
           setGameDetails(detailsResponse.data)
