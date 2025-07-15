@@ -94,17 +94,17 @@ class GameDataService {
             title: data.name,
             description: data.short_description,
             image: data.header_image,
-            releaseDate: data.release_date.date,
+            releaseDate: data.release_date?.date || '2024-01-01',
             genres: data.genres?.map(g => g.description) || [],
             developers: data.developers || [],
             publishers: data.publishers || [],
             platforms: [
-              ...(data.platforms.windows ? ['Windows'] : []),
-              ...(data.platforms.mac ? ['macOS'] : []),
-              ...(data.platforms.linux ? ['Linux'] : [])
+              ...(data.platforms?.windows ? ['Windows'] : []),
+              ...(data.platforms?.mac ? ['macOS'] : []),
+              ...(data.platforms?.linux ? ['Linux'] : [])
             ],
             screenshots: data.screenshots?.map(s => s.path_full) || [],
-            videos: data.movies?.map(m => m.mp4.max) || [],
+            videos: data.movies?.map(m => m.mp4?.max).filter(Boolean) || [],
             rating: 0, // Steam doesn't provide rating in this endpoint
             metacritic: null,
             reviewsCount: 0,
@@ -161,11 +161,11 @@ class GameDataService {
       if (itadData && itadData.deals && itadData.deals.length > 0) {
         const bestDeal = itadData.deals[0] // Get the best deal
         return {
-          price: bestDeal.price.amount,
-          originalPrice: bestDeal.price_old.amount,
-          discount: bestDeal.price_cut,
-          currency: bestDeal.price.currency,
-          stores: [bestDeal.shop.name],
+          price: bestDeal.price?.amount || 0,
+          originalPrice: bestDeal.price_old?.amount || 0,
+          discount: bestDeal.price_cut || 0,
+          currency: bestDeal.price?.currency || 'USD',
+          stores: [bestDeal.shop?.name || 'Unknown'],
           dataSources: {
             metadata: 'Mock',
             pricing: 'ITAD',
@@ -187,8 +187,8 @@ class GameDataService {
           return {
             price: price.final / 100, // Convert from cents
             originalPrice: price.initial / 100,
-            discount: price.discount_percent,
-            currency: price.currency,
+            discount: price.discount_percent || 0,
+            currency: price.currency || 'USD',
             stores: ['Steam'],
             dataSources: {
               metadata: 'Mock',
@@ -327,10 +327,10 @@ class GameDataService {
   async searchGames(query: string): Promise<UnifiedGameData[]> {
     try {
       // Try RAWG first
-      const rawgResults = await rawgApiService.searchGames(query, 1, 10)
-      if (rawgResults.results.length > 0) {
+      const rawgResults = await rawgApiService.searchGameRAWG(query)
+      if (rawgResults && rawgResults.length > 0) {
         const unifiedGames = await Promise.all(
-          rawgResults.results.slice(0, 5).map(async (game) => {
+          rawgResults.slice(0, 5).map(async (game: any) => {
             return await this.getUnifiedGameData(game.slug)
           })
         )
@@ -347,10 +347,10 @@ class GameDataService {
   // Get popular games
   async getPopularGames(): Promise<UnifiedGameData[]> {
     try {
-      const rawgResults = await rawgApiService.getPopularGames(1, 10)
-      if (rawgResults.results.length > 0) {
+      const rawgResults = await rawgApiService.getTrendingGamesRAWG()
+      if (rawgResults && rawgResults.length > 0) {
         const unifiedGames = await Promise.all(
-          rawgResults.results.slice(0, 5).map(async (game) => {
+          rawgResults.slice(0, 5).map(async (game: any) => {
             return await this.getUnifiedGameData(game.slug)
           })
         )
