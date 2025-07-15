@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Header from '@/components/Header'
@@ -16,7 +16,7 @@ interface SearchFilters {
   store: string
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [currency, setCurrency] = useState('CRC')
@@ -385,4 +385,22 @@ export default function SearchPage() {
       <ScrollToTop />
     </div>
   );
+}
+
+function SearchLoading() {
+  return (
+    <div className="min-h-screen bg-dark-900">
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-white text-xl">Cargando búsqueda...</div>
+      </div>
+    </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<SearchLoading />}>
+      <SearchContent />
+    </Suspense>
+  )
 }
