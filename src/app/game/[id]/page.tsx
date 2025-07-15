@@ -669,12 +669,18 @@ export default function GameDetailPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-white text-sm font-semibold truncate">{similarGame.title}</p>
                           <p className="text-primary-400 text-sm">
-                            {CurrencyService.formatPrice(similarGame.priceCRC ?? 0, currency)}
+                            {CurrencyService.formatPrice(similarGame.priceCRC ?? 0, currency)}{' '}
+                            <span className="line-through opacity-60">
+                              {CurrencyService.formatPrice(similarGame.originalPriceCRC ?? 0, currency)}
+                            </span>
                           </p>
+                          <span className="text-green-400 ml-2">
+                            -{similarGame.discount ?? 0}%
+                          </span>
+                          <span className="block text-sm text-neutral-400">
+                            {similarGame.store ?? 'Unknown'}
+                          </span>
                         </div>
-                        <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded flex-shrink-0">
-                          -{similarGame.discount}%
-                        </span>
                       </div>
                     </div>
                   ))}

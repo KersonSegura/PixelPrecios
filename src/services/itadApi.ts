@@ -31,25 +31,27 @@ async function lookupGameIds(titles: string[]) {
 }
 
 // Función para obtener precios usando IDs
-async function getPricesByIds(ids: string[], region = "us") {
-  const url = `${BASE_URL}/games/prices/v3?key=${ITAD_API_KEY}&country=${region}`;
-  
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(ids)
-    });
-    
-    const data = await res.json();
-    console.log("ITAD prices response:", JSON.stringify(data, null, 2));
-    return data;
-  } catch (err) {
-    console.error("Error getting prices from ITAD:", err);
-    throw err;
+export async function getPricesByIds(ids: string[], region = 'us', country = 'US') {
+  if (!ids.length) return {};
+
+  const params = ids.map(id => `ids[]=${encodeURIComponent(id)}`).join('&');
+  const shops = 'steam,gog,epic';
+  const url = `${BASE_URL}/games/prices/v3?key=${ITAD_API_KEY}&region=${region}&country=${country}&shops=${shops}&${params}`;
+
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json'
+    }
+  });
+
+  if (!res.ok) {
+    console.error('ITAD GET error:', res.status, res.statusText);
+    return {};
   }
+
+  const data = await res.json();
+  return data;
 }
 
 // Función para buscar juegos en ITAD
@@ -205,6 +207,18 @@ export async function getGameDeals(gameId: string, region = "us") {
     };
   } catch (err) {
     console.error("Error getting game deals from ITAD:", err);
+    return null;
+  }
+}
+
+// Exportar función para obtener UUID de un solo título
+export async function getGameUUID(title: string): Promise<string | null> {
+  try {
+    const idMap = await lookupGameIds([title]);
+    const uuid = idMap[title];
+    return uuid || null;
+  } catch (err) {
+    console.error(`Error en getGameUUID para: ${title}`, err);
     return null;
   }
 }

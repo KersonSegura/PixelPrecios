@@ -12,36 +12,36 @@ const gameTitles: string[] = [
   'Elden Ring'
 ];
 
-async function fetchPlain(title: string): Promise<string | null> {
+async function fetchUUID(title: string): Promise<string | null> {
   try {
-    const url = `https://api.isthereanydeal.com/v01/search/search/?key=${ITAD_API_KEY}&q=${encodeURIComponent(title)}`;
+    const url = `https://api.isthereanydeal.com/games/search/v1?key=${ITAD_API_KEY}&q=${encodeURIComponent(title)}`;
     const res = await axios.get(url);
-    const match = res.data?.data?.results?.[0];
-    return match?.plain || null;
+    const match = res.data?.results?.[0];
+    return match?.id || null;
   } catch (error) {
-    console.warn(`⚠️ Error buscando plain para: ${title}`);
+    console.warn(`⚠️ Error buscando UUID para: ${title}`);
     return null;
   }
 }
 
-async function buildPlainMap(titles: string[]) {
-  const plainMap: Record<string, string> = {};
+async function buildUUIDMap(titles: string[]) {
+  const uuidMap: Record<string, string> = {};
 
   for (const title of titles) {
-    console.log(`🔍 Buscando plain para: ${title}`);
-    const plain = await fetchPlain(title);
-    if (plain) {
-      plainMap[title] = plain;
-      console.log(`✅ ${title} => ${plain}`);
+    console.log(`🔍 Buscando UUID para: ${title}`);
+    const uuid = await fetchUUID(title);
+    if (uuid) {
+      uuidMap[title] = uuid;
+      console.log(`✅ ${title} => ${uuid}`);
     } else {
-      console.log(`❌ No se encontró plain para: ${title}`);
+      console.log(`❌ No se encontró UUID para: ${title}`);
     }
-    await new Promise(r => setTimeout(r, 300)); // para evitar rate limiting
+    await new Promise(r => setTimeout(r, 300));
   }
 
-  const outputPath = path.join(__dirname, 'plains.json');
-  fs.writeFileSync(outputPath, JSON.stringify(plainMap, null, 2));
-  console.log(`📝 plains.json guardado en ${outputPath}`);
+  const outputPath = path.join(__dirname, 'uuids.json');
+  fs.writeFileSync(outputPath, JSON.stringify(uuidMap, null, 2));
+  console.log(`📝 uuids.json guardado en ${outputPath}`);
 }
 
-buildPlainMap(gameTitles); 
+buildUUIDMap(gameTitles); 

@@ -1,19 +1,16 @@
 import { NextResponse } from 'next/server';
-import { getDealsByStoreList } from '@/services/itadApi';
+import fs from 'fs';
+import path from 'path';
 
 export async function GET() {
+  const filePath = path.join(process.cwd(), 'src', 'data', 'discountedGames.json');
   try {
-    console.log("Store deals endpoint called");
-    
-    const deals = await getDealsByStoreList(
-      ["steam", "epic", "gog", "origin", "uplay", "battlenet"],
-      "us" // Puedes cambiarlo por "latam" o "cr" si ITAD lo soporta
-    );
-
-    console.log("Deals returned:", deals.length);
-    return NextResponse.json({ deals });
-  } catch (err) {
-    console.error("Store deals error:", err);
-    return NextResponse.json({ error: "No se pudieron cargar los deals." }, { status: 500 });
+    const data = fs.readFileSync(filePath, 'utf-8');
+    const games = JSON.parse(data);
+    // Aquí puedes personalizar la respuesta si store-deals requiere filtrado especial
+    return NextResponse.json({ games });
+  } catch (error) {
+    console.error('Error leyendo discountedGames.json:', error);
+    return NextResponse.json({ games: [] }, { status: 500 });
   }
 } 

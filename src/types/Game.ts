@@ -1,11 +1,16 @@
 // Shared Game interface for the entire application
 export interface Game {
   id: string;
+  uuid?: string;
   title: string;
   price: number;
   originalPrice: number;
   currency: string;
   image: string;
+  priceCRC?: number;              // ⬅ opcionales
+  originalPriceCRC?: number;
+  discount?: number;
+  store?: string;
   [key: string]: any; // opcional, si tienes propiedades extra
 }
 
