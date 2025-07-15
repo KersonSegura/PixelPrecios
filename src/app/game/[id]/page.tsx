@@ -669,7 +669,7 @@ export default function GameDetailPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-white text-sm font-semibold truncate">{similarGame.title}</p>
                           <p className="text-primary-400 text-sm">
-                            {CurrencyService.formatPrice(similarGame.priceCRC, currency)}
+                            {CurrencyService.formatPrice(similarGame.priceCRC ?? 0, currency)}
                           </p>
                         </div>
                         <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded flex-shrink-0">

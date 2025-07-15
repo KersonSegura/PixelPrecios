@@ -26,7 +26,17 @@ export default function SearchContent({ allGames }: SearchContentProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {filteredGames.map((game, index) => (
-        <GameCard key={game.id ?? index} game={game} currency="CRC" />
+        <GameCard
+          key={game.id ?? index}
+          currency="CRC"
+          game={{
+            ...game,
+            priceCRC: game.priceCRC ?? 0,
+            originalPriceCRC: game.originalPriceCRC ?? 0,
+            discount: game.discount ?? 0,
+            store: game.store ?? 'Unknown',
+          }}
+        />
       ))}
     </div>
   )
