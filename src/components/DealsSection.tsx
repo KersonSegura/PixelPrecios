@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import GameCard from './GameCard'
 import { CurrencyService, Game } from '@/services/currencyService'
-import { TrendingGameAPI } from '@/types/Game'
+import type { TrendingGameAPI } from '@/types/Game'
 
 interface DealsSectionProps {
   currency: string
@@ -44,7 +44,7 @@ export default function DealsSection({ currency }: DealsSectionProps) {
   }, [currency])
 
   // Filtrado de juegos según el filtro activo
-  const filteredGames = games.filter((game) => {
+  const filteredGames = useMemo(() => games.filter((game) => {
     if (activeFilter === 'all') return true
     if (activeFilter === 'under5') {
       const rates = {
@@ -97,13 +97,13 @@ export default function DealsSection({ currency }: DealsSectionProps) {
       return shop.toLowerCase() === 'gog'
     }
     return true
-  })
+  }), [games, activeFilter, currency])
 
   // Actualizar juegos mostrados cuando cambie el filtro o los juegos
   useEffect(() => {
     setDisplayedGames(filteredGames.slice(0, gamesPerPage))
     setCurrentPage(1)
-  }, [activeFilter, games])
+  }, [filteredGames])
 
   // Cargar más juegos
   const loadMoreOffers = async () => {

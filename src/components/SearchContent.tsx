@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Game } from '@/types/Game'
+import { GameWithTags } from '@/types/Game'
 import GameCard from './GameCard'
 
 interface SearchContentProps {
-  allGames: Game[]
+  allGames: GameWithTags[]
 }
 
 export default function SearchContent({ allGames }: SearchContentProps) {
@@ -26,7 +26,7 @@ export default function SearchContent({ allGames }: SearchContentProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {filteredGames.map((game, index) => (
-        <GameCard key={game.id + index} game={game} />
+        <GameCard key={game.id ?? index} game={game} currency="CRC" />
       ))}
     </div>
   )
