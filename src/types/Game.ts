@@ -1,19 +1,16 @@
 // Shared Game interface for the entire application
 export interface Game {
-  id?: number;
-  name: string;
+  id: string;
+  title: string;
+  price: number;
+  originalPrice: number;
+  currency: string;
   image: string;
-  shop?: string;
-  priceNew?: number;
-  priceOld?: number;
-  discount?: number;
-  cut?: number;
-  url?: string;
-  slug?: string;
-  platforms?: string[];
-  rating?: number;
-  stores?: string[];
-  price?: any; // ITAD price data or null
+  [key: string]: any; // opcional, si tienes propiedades extra
+}
+
+export interface GameWithTags extends Game {
+  tags: string[];
 }
 
 // Interface for trending games from API
